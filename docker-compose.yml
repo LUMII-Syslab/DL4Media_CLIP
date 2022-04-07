@@ -1,0 +1,10 @@
+version: '3'
+services:
+  model:
+    build: .
+    volumes:
+      - ./data:/data
+    ports:
+      - "4000:5000"
+    environment:
+      - PYTHONUNBUFFERED=1
