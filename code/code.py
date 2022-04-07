@@ -587,7 +587,7 @@ img_encodings = deterministic_shuffle_np(img_encodings)[:100]
 
 #Takes one text.
 #Returns array of clip similarities for the 100 images.
-def return_best_matches_clipper(text):
+def get_clip_sim(text):
     eng_text = translate([text])
     text_enc = clip_encode_text(eng_text)
     return get_CLIP_similarity_matrix_low(text_enc, img_encodings)
@@ -808,6 +808,23 @@ def get_LR_cluster_face_similarity_low(d_clusters, i_clusters, probabilities, pr
 
 #Returns array of similarities based on face sim.
 def get_face_sim(text):
-    fullnames = extract_text_fullnames([text])
+    text = translate([text])
+    fullnames = extract_text_fullnames(text)
     clusters = match_fullnames_to_clusters(fullnames, name_clusts)
     return get_LR_cluster_face_similarity_low(clusters, image_faces, probs)
+    
+def get_general_sim(text):
+    f = get_face_sim(text)
+    c = get_clip_sim(text)
+    return f + c
+    
+import torch
+def get_top_k(text):
+    sim = get_general_sim(text)
+    val, idx = torch.topk(torch.tensor(sim), k = 5)
+    return idx[0].data.numpy()
+    
+def get_images(text):
+    from PIL import Image
+    idx = get_top_k(text)
+    return idx
