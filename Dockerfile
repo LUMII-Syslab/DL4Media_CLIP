@@ -19,9 +19,14 @@ COPY ./code/get_clip.py /app/code/get_clip.py
 RUN pip install git+https://github.com/openai/CLIP.git
 RUN python ./app/code/get_clip.py
 
+RUN pip install editdistance
+
+RUN pip install flair
+COPY ./code/get_ner.py /app/code/get_ner.py
+RUN python ./app/code/get_ner.py
+
 COPY . /app
 WORKDIR /app
-
 
 # Expose the Flask port
 EXPOSE 5000
