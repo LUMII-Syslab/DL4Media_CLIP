@@ -1,10 +1,10 @@
 FROM python:3.7-bullseye
 
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
 RUN apt update
 RUN apt install libtinfo5
-RUN pip install ftfy regex
+
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
 
 COPY ./code/model_dl.py /app/code/model_dl.py
 RUN python ./app/code/model_dl.py
@@ -19,9 +19,11 @@ COPY ./code/get_clip.py /app/code/get_clip.py
 RUN pip install git+https://github.com/openai/CLIP.git
 RUN python ./app/code/get_clip.py
 
-RUN pip install editdistance
+#RUN pip install editdistance
 
-RUN pip install flair
+#RUN pip install flair
+
+
 COPY ./code/get_ner.py /app/code/get_ner.py
 RUN python ./app/code/get_ner.py
 

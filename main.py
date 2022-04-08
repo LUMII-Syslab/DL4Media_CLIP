@@ -12,11 +12,14 @@ def get_index():
     return "Server for model is running"
 
 
+# @app.route('/search-images/<text>')
 @app.route('/search-images', methods=["POST"])
-def extract_ticker():
+def extract_ticker(text):
     string = request.get_data().decode()
     
-    idx = get_images(string)
+    print ("Searching ", text)
+
+    idx = get_images(text)
     
     return send_file('images/' + str(idx[0]) + '.jpg')
 

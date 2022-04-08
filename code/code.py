@@ -8,6 +8,22 @@
 #model_type:
 #  'bad' - use model opus-mt
 #  'good' - use model m2m_100_1.2B
+
+import torch
+import gc
+import torch
+import clip
+import gzip
+import html
+import os
+import ftfy
+import regex as re
+
+from PIL import Image
+from functools import lru_cache
+from easynmt import EasyNMT
+
+
 easynmt_model_type = None
 easynmt_model = None
 def translate(texts, model_type = 'bad', batch_size = 64, progress = False):
@@ -20,10 +36,6 @@ def translate(texts, model_type = 'bad', batch_size = 64, progress = False):
 
   if progress:
     print('Getting Model')
-
-  import gc
-
-  from easynmt import EasyNMT
 
   if easynmt_model_type != model_type:
     if model_type == 'good':
@@ -56,7 +68,6 @@ CLIP_configed = False
 
 def config_torch():
     global torch
-    import torch
     torch.device('cpu')
 
 #Get clip model
@@ -67,7 +78,7 @@ def config_CLIP():
   global CLIP_preprocess
   global clip
   if not CLIP_configed:
-    import clip
+
     config_torch()
     CLIP_model, CLIP_preprocess = clip.load('ViT-B/32')
     CLIP_configed = True
@@ -77,13 +88,7 @@ def config_CLIP():
 
 #!pip install ftfy
 
-import gzip
-import html
-import os
-from functools import lru_cache
 
-import ftfy
-import regex as re
 
 
 @lru_cache()
@@ -818,13 +823,17 @@ def get_general_sim(text):
     c = get_clip_sim(text)
     return f + c
     
-import torch
+
 def get_top_k(text):
     sim = get_general_sim(text)
     val, idx = torch.topk(torch.tensor(sim), k = 5)
+
+    print ("val", val)
+    print ("idx", idx)
+
+
     return idx[0].data.numpy()
     
 def get_images(text):
-    from PIL import Image
     idx = get_top_k(text)
     return idx
