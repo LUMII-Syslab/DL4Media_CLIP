@@ -14,8 +14,8 @@ def get_index():
 
 # @app.route('/search-images/<text>')
 @app.route('/search-images', methods=["POST"])
-def extract_ticker(text):
-    string = request.get_data().decode()
+def extract_ticker():
+    text = request.get_data().decode()
     
     print ("Searching ", text)
 

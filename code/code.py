@@ -828,10 +828,6 @@ def get_top_k(text):
     sim = get_general_sim(text)
     val, idx = torch.topk(torch.tensor(sim), k = 5)
 
-    print ("val", val)
-    print ("idx", idx)
-
-
     return idx[0].data.numpy()
     
 def get_images(text):
